@@ -25,7 +25,6 @@ class NoteRepository implements INoteRepository {
         .map(
           (snapshot) => right<NoteFailure, KtList<Note>>(
             snapshot.docs
-                // TODO: Check if [QueryDocumentSnapshot] can be cast to [DocumentSnapshot]
                 .map((doc) => NoteDto.fromFirestore(
                         doc as DocumentSnapshot<Map<String, dynamic>>)
                     .toDomain())
@@ -49,11 +48,9 @@ class NoteRepository implements INoteRepository {
         .orderBy('serverTimestamp', descending: true)
         .snapshots()
         .map(
-          (snapshot) => snapshot.docs
-              // TODO: Check if [QueryDocumentSnapshot] can be cast to [DocumentSnapshot]
-              .map((doc) => NoteDto.fromFirestore(
-                      doc as DocumentSnapshot<Map<String, dynamic>>)
-                  .toDomain()),
+          (snapshot) => snapshot.docs.map((doc) => NoteDto.fromFirestore(
+                  doc as DocumentSnapshot<Map<String, dynamic>>)
+              .toDomain()),
         )
         .map(
           (notes) => right<NoteFailure, KtList<Note>>(
